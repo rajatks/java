@@ -1,0 +1,12 @@
+dd| 33| 8000| null
+tt| 44| 25000| null
+dd| 21| 8000| null
+raga| 34| 8000| null
+22| rajat| 21| 8000| null
+2| kunal| 22| 25000| null
+3| gauri| 23| 80000| null
+1| raf| 22| 25000| null
+2| rasd| 26| 80000| null
+2| 3| 23| 25000| Programmer
+2| 1| 22| 8000| Clerk
+2| rasd| 26| 80000| Manager
