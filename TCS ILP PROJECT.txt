@@ -1,0 +1,358 @@
+package com;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Random;
+class regDAO
+{ 
+	//CONNECTION TO JDBC
+	static final String DB_URL = "jdbc:oracle:thin:@172.18.65.173:1521:ORCL";
+	   static final String USER = "ILPGhy73";
+	   static final String PASS = "Guwahati123";
+public static void main(String[] args) throws ClassNotFoundException, NumberFormatException, IOException, SQLException
+{
+	// MENU DRIVEN 
+	System.out.println("**********CUSTOMER MANAGEMENT PORTAL**********");
+	System.out.println();
+	System.out.println();
+	
+System.out.println("---------- Menu Options ----------");
+System.out.println();
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+boolean flag2=true;
+while(flag2) {
+	
+	System.out.println("Please Enter Your Role :");
+	System.out.println("1.Relationship Manager");
+	System.out.println("2.Customer");
+	System.out.println("3.Exit");
+	int k;
+	k=Integer.parseInt(br.readLine());
+	switch(k) {
+	case 1:
+		System.out.println("Enter Relationship Manager Id ");
+		int p=Integer.parseInt(br.readLine());
+		System.out.println("Enter Relationship Manager Password");
+		int pp=Integer.parseInt(br.readLine());
+		if((p==0001)&&(pp==1234)) {
+			System.out.println("Logged In Sucessfully!");
+			System.out.println();
+			boolean flag1=true;
+			while(flag1)
+			{
+				// MENU DRIVEN OPERATIONS FOR RELATIONSHIP MANAGER
+			System.out.println("1. Add Customer ");
+			System.out.println("2. Update Customer Details");
+			System.out.println("3. View Customer Details"); 
+			System.out.println("4. Delete Customer"); 
+			System.out.println("5. Go to Main Menu ");
+			System.out.println();
+			System.out.println("***** Enter Your choice*****");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection conn= DriverManager.getConnection(DB_URL,USER,PASS);
+			Statement stmt = conn.createStatement(); // CONNECTION ESTABLISHMENT
+			Random rand=new Random();
+			int choice;
+			choice = Integer.parseInt(br.readLine());
+			switch(choice)
+			{
+			case 1:
+				//CUSTOMER REGISTRATION
+			System.out.println("Enter Customer Name");
+			String name =(br.readLine());
+			System.out.println("Enter City.");
+			String city = (br.readLine());
+			System.out.println("Enter Customer email id");
+			String email = (br.readLine());
+			System.out.println("Enter Mobile No.");
+			long mobile = Integer.parseInt(br.readLine());
+			int id=rand.nextInt(10000);
+			System.out.println("Your Registration id is "+id);
+			System.out.println("Please Set Password ");
+			String pass=(br.readLine());
+			stmt.executeUpdate("INSERT INTO cust VALUES ('"+id+"','"+name+"','"+city+"','"+email+"','"+mobile+"','"+pass+"')");
+			System.out.println("Data is Sucessfully Inserted");
+			System.out.println();
+			break;
+			case 2:
+				//CUSTOMER UPDATE
+			System.out.println("Enter Customer Id.");
+			id=Integer.parseInt(br.readLine());
+			
+			boolean flag=true;
+			int ch;
+			while(flag) {
+				System.out.println("---------- Menu Options ----------");
+				System.out.println("enter 1.Name Update");
+				System.out.println("enter 2.Email Update");
+				System.out.println("enter 3.Contact Update");
+				System.out.println("enter 4.Address Update");
+				System.out.println("enter 5.Go to previous Menu ");
+			ch=Integer.parseInt(br.readLine());
+			switch(ch) {
+			case 1:
+				System.out.println("Enter Customer Name for Update.");
+				name =(br.readLine());
+				stmt.executeUpdate("update cust set name='"+name+"' where id= '"+id+"'");
+				System.out.println("Data is Sucessfully Updated");
+				System.out.println();
+				break;
+			case 2:
+				System.out.println("Enter Customer Email for Update.");
+				email =(br.readLine());
+				stmt.executeUpdate("update cust set email='"+email+"' where id= '"+id+"'");
+				System.out.println("Data is Sucessfully Updated");
+				System.out.println();
+				break;
+			case 3:
+				System.out.println("Enter Customer Mobile Number for Update.");
+				mobile =Integer.parseInt(br.readLine());
+				stmt.executeUpdate("update cust set contact='"+mobile+"' where id= '"+id+"'");
+				System.out.println("Data is Sucessfully Updated");
+				System.out.println();
+				break;
+			case 4:
+				System.out.println("Enter Customer Address for Update.");
+				city =(br.readLine());
+				stmt.executeUpdate("update cust set city='"+city+"' where id= '"+id+"'");
+				System.out.println("Data is Sucessfully Updated");
+				System.out.println();
+				break;
+			case 5:
+				flag=false;
+				break;
+			}
+			}
+			break;
+
+			case 3:
+				// RELATIONSHIP MANAGER VIEW
+			System.out.println("---------- Menu Options ----------");
+			System.out.println("1.View By ID");
+			System.out.println("2.View All");
+			int nn=Integer.parseInt(br.readLine());
+			switch(nn) {
+			case 1:
+				System.out.println("Enter Customer id: "); 
+				int idd=Integer.parseInt(br.readLine());
+				ResultSet rs = stmt.executeQuery("select * from cust where id='"+idd+"'"); 
+				//Print Value
+				while(rs.next()) {
+					
+					System.out.println();
+					System.out.println();
+					
+				System.out.println("--------------------------------------------------------------------------");
+				System.out.println();
+				System.out.println("ID "+"\t\t"+"NAME"+"\t\t"+"Address "+"\t\t"+"Email"+"\t\t"+"Contact");
+				System.out.println();
+				System.out.println(rs.getInt("ID")+"\t\t"+rs.getString("NAME")+"\t\t"+
+							rs.getString("CITY")+"\t\t"+rs.getString("EMAIL")+"\t\t"+
+							rs.getInt("CONTACT"));
+				System.out.println();
+				System.out.println();
+					System.out.println("--------------------------------------------------------------------------");
+					System.out.println();
+					System.out.println();
+				}
+				break;
+				
+			case 2:
+				 rs = stmt.executeQuery("select * from cust "); 
+				//Print Value
+				 System.out.println();
+					System.out.println();
+					System.out.println("--------------------------------------------------------------------------------------");
+					
+					System.out.println();
+					System.out.println("ID "+"\t\t"+"NAME"+"\t\t"+"Address "+"\t\t"+"Email"+"\t\t"+"Contact");
+					System.out.println();
+				while(rs.next()) {
+					
+					
+					System.out.println(rs.getInt("ID")+"\t\t"+rs.getString("NAME")+"\t\t"+
+							rs.getString("CITY")+"\t\t"+rs.getString("EMAIL")+"\t\t"+
+							rs.getInt("CONTACT"));
+					
+						
+				}
+				System.out.println();
+				System.out.println("--------------------------------------------------------------------------------------------");
+				System.out.println();
+				System.out.println();
+				rs.close();
+				stmt.close();
+				conn.close();
+				break;
+			
+			}
+			
+			
+			break;
+
+			case 4:
+
+			System.out.println("Enter the REGISTRAION_ID of Customer to be deleted ");
+			id=Integer.parseInt(br.readLine());
+
+			stmt.executeUpdate("delete from cust where id='"+id+"'");
+			System.out.println(" Deleted Sucessfull.. ");
+			System.out.println();
+			case 5:
+				flag1=false;
+				break;
+
+			}
+
+			}
+			break;
+			
+			
+		}
+		else {
+			System.out.println();
+			System.out.println("Sorry! ID or Password is Incorrect. Please Try Again! ");
+			System.out.println();
+		}
+		break;
+	case 2:
+		boolean flag1=true;
+		while(flag1)
+		{
+		System.out.println("1. Add Customer ");
+		System.out.println("2. Update Customer Details");
+		System.out.println("3. View Customer Details"); 
+		System.out.println("4. Exit ");
+		System.out.println();
+		System.out.println("***** Enter Your choice*****");
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection conn= DriverManager.getConnection(DB_URL,USER,PASS);
+		Statement stmt = conn.createStatement(); 
+		Random rand=new Random();
+		int choice;
+		choice = Integer.parseInt(br.readLine());
+		switch(choice)
+		{
+		case 1:
+		System.out.println("Enter Customer Name");
+		String name =(br.readLine());
+		System.out.println("Enter City.");
+		String city = (br.readLine());
+		System.out.println("Enter Customer email id");
+		String email = (br.readLine());
+		System.out.println("Enter Mobile No.");
+		long mobile = Integer.parseInt(br.readLine());
+		int id=rand.nextInt(10000);
+		System.out.println(" Registration id is "+id);
+		System.out.println("Please Set Password ");
+		String pass=(br.readLine());
+		stmt.executeUpdate("INSERT INTO cust VALUES ('"+id+"','"+name+"','"+city+"','"+email+"','"+mobile+"','"+pass+"')");
+		System.out.println("Data is Sucessfully Inserted");
+		break;
+
+		case 2:
+		System.out.println("Enter Customer Id.");
+		id=Integer.parseInt(br.readLine());
+//		ResultSet rs = stmt.executeQuery("select * from cust where id='"+id+"'");
+//		String kk="";
+//		while(rs.next()) {
+//		 kk=rs.getString("pass");
+//		 System.out.println("password "+kk);
+//		}
+		
+		boolean flag=true;
+		int ch;
+		while(flag) {
+			
+			System.out.println("enter 1.Name Update");
+			System.out.println("enter 2.Email Update");
+			System.out.println("enter 3.Contact Update");
+			System.out.println("enter 4.Address Update");
+			System.out.println("enter 5.Exit ");
+		ch=Integer.parseInt(br.readLine());
+		switch(ch) {
+		case 1:
+			System.out.println("Enter Customer Name for Update.");
+			name =(br.readLine());
+			stmt.executeUpdate("update cust set name='"+name+"' where id= '"+id+"'");
+			System.out.println("Data is Sucessfully Updated");
+			System.out.println();
+			break;
+		case 2:
+			System.out.println("Enter Customer Email for Update.");
+			email =(br.readLine());
+			stmt.executeUpdate("update cust set email='"+email+"' where id= '"+id+"'");
+			System.out.println("Data is Sucessfully Updated");
+			System.out.println();
+			break;
+		case 3:
+			System.out.println("Enter Customer Mobile Number for Update.");
+			mobile =Integer.parseInt(br.readLine());
+			stmt.executeUpdate("update cust set contact='"+mobile+"' where id= '"+id+"'");
+			System.out.println("Data is Sucessfully Updated");
+			System.out.println();
+			break;
+		case 4:
+			System.out.println("Enter Customer Address for Update.");
+			city =(br.readLine());
+			stmt.executeUpdate("update cust set city='"+city+"' where id= '"+id+"'");
+			System.out.println("Data is Sucessfully Updated");
+			System.out.println();
+			break;
+		case 5:
+			flag=false;
+			break;
+		}
+		}
+		break;
+
+		case 3:
+		System.out.println("Enter Customer id: "); 
+		int idd=Integer.parseInt(br.readLine());
+		ResultSet rs = stmt.executeQuery("select * from cust where id='"+idd+"'"); 
+		//Print Value
+		while(rs.next()) {
+			System.out.println();
+			System.out.println();
+			System.out.println("--------------------------------------------------------------------------");
+			System.out.println();
+			System.out.print("ID : ");
+		System.out.println(id =rs.getInt(1));
+		System.out.print("Name : ");
+		System.out.println(name = rs.getString(2));
+		System.out.print("Address : ");
+		System.out.println(city= rs.getString(3));
+		System.out.print("Email ID : ");
+		System.out.println(email=rs.getString(4));
+		System.out.print("Contact Number : ");
+		System.out.println(mobile=rs.getLong(5));
+		System.out.println();
+		System.out.println("--------------------------------------------------------------------------");
+		System.out.println();
+		System.out.println();
+		}
+		rs.close();
+		stmt.close();
+		conn.close();
+		break;
+		case 4:
+			flag1=false;
+			break;
+
+		}
+
+		}
+		break;
+	case 3:
+		flag2=false;
+		break;
+		
+	}
+}
+
+
+}
+}
